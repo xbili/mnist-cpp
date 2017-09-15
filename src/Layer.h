@@ -13,8 +13,9 @@ class Layer {
 private:
     Neuron **neurons; // Array of neurons
     int neuronCount; // The total count of neurons
-    float *layerInput; // The layer inputs
+    float *layerInputs; // The layer inputs
     int inputCount; // The total count of elements in layer input
+
 public:
     // Constructors & Destructors
     Layer(int inputSize, int _neuronCount);
@@ -30,6 +31,9 @@ public:
     float getLayerInput(int i) const;
     float *getLayerInputs() const;
     int getInputCount() const;
+
+    // Setters
+    void setLayerInput(int i, float layerInput);
 };
 
 

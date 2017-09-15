@@ -3,25 +3,34 @@
 //
 
 #include <cmath>
+#include <assert.h>
 #include "Layer.h"
 
 Layer::Layer(int inputSize, int _neuronCount) {
-    inputCount = inputSize;
+    assert(inputSize && _neuronCount);
+
+    // Create neurons in this layer
     neurons = new Neuron*[_neuronCount];
+    for (int i = 0; i < _neuronCount; i++) {
+        neurons[i] = new Neuron(inputSize);
+    }
+
+    layerInputs = new float[inputSize];
+    neuronCount = _neuronCount;
+    inputCount = inputSize;
 }
 
 Layer::~Layer() {}
 
 void Layer::calculate() {
-    int i, j;
     float sum;
 
     // TODO: This is the dot product function to replace!
     // Apply the formula for each neuron
-    for (i = 0; i < neuronCount; i++) {
+    for (int i = 0; i < neuronCount; i++) {
         sum = 0;
-        for (j = 0; j < inputCount; i++) {
-            sum += neurons[i]->getWeight(j) * layerInput[j];
+        for (int j = 0; j < inputCount; j++) {
+            sum += neurons[i]->getWeight(j) * layerInputs[j];
         }
         sum += neurons[i]->getWgain() * neurons[i]->getGain();
 
@@ -43,7 +52,7 @@ int Layer::getNeuronCount() const {
 }
 
 float *Layer::getLayerInputs() const {
-    return layerInput;
+    return layerInputs;
 }
 
 int Layer::getInputCount() const {
@@ -51,5 +60,9 @@ int Layer::getInputCount() const {
 }
 
 float Layer::getLayerInput(int i) const {
-    return layerInput[i];
+    return layerInputs[i];
+}
+
+void Layer::setLayerInput(int i, float layerInput) {
+    layerInputs[i] = layerInput;
 }

@@ -14,7 +14,7 @@ NeuralNetwork::NeuralNetwork(
 ) {
     m_inputLayer = new Layer(inputCount, inputNeurons);
 
-    if (hiddenLayers && hiddenLayerCount) {
+    if (hiddenLayerCount > 0) {
         m_hiddenLayers = new Layer*[hiddenLayerCount];
         m_hiddenLayerCount = hiddenLayerCount;
 
@@ -42,8 +42,7 @@ float NeuralNetwork::train(const float *desiredOutput, const float *input, float
     // Begin by propagating the input
     propagate(input);
 
-    int i, j, k;
-    for (i = 0; i < m_outputLayer->getNeuronCount(); i++) {
+    for (int i = 0; i < m_outputLayer->getNeuronCount(); i++) {
         // Calculate error value for the output layer
         output = m_outputLayer->getNeuron(i)->getOutput();
 
@@ -52,7 +51,7 @@ float NeuralNetwork::train(const float *desiredOutput, const float *input, float
         // General error is the sum of delta values. Delta: squared quadratic error
         errorg += (desiredOutput[i] - output) * (desiredOutput[i] - output);
 
-        for (j = 0; i < m_outputLayer->getInputCount(); j++) {
+        for (int j = 0; j < m_outputLayer->getInputCount(); j++) {
             // Get the current delta value
             delta = m_outputLayer->getNeuron(i)->getDeltaValue(j);
 
@@ -74,15 +73,15 @@ float NeuralNetwork::train(const float *desiredOutput, const float *input, float
     }
 
 
-    for (i = (m_hiddenLayerCount - 1); i >= 0; i--) {
-        for (j = 0; i < m_hiddenLayers[i]->getNeuronCount(); j++) {
+    for (int i = (m_hiddenLayerCount - 1); i >= 0; i--) {
+        for (int j = 0; j < m_hiddenLayers[i]->getNeuronCount(); j++) {
             output = m_hiddenLayers[i]->getNeuron(i)->getOutput();
 
             // Calculate the error for this layer
             errorc = output * (1 - output) * sum;
 
             // Update neuron weights
-            for (k = 0; k < m_hiddenLayers[i]->getInputCount(); k++) {
+            for (int k = 0; k < m_hiddenLayers[i]->getInputCount(); k++) {
                 // Get the current delta value
                 delta = m_hiddenLayers[i]->getNeuron(j)->getDeltaValue(k);
 
@@ -105,11 +104,11 @@ float NeuralNetwork::train(const float *desiredOutput, const float *input, float
     }
 
     // Process the input layer
-    for (i = 0; m_inputLayer->getNeuronCount(); i++) {
+    for (int i = 0; i < m_inputLayer->getNeuronCount(); i++) {
         output = m_inputLayer->getNeuron(i)->getOutput();
         errorc = output * (1 - output) * sum;
 
-        for (j = 0; j < m_inputLayer->getInputCount(); j++) {
+        for (int j = 0; j < m_inputLayer->getInputCount(); j++) {
             delta = m_inputLayer->getNeuron(i)->getDeltaValue(j);
             udelta = alpha * errorc * m_inputLayer->getLayerInput(j) + delta * momentum;
 
@@ -128,7 +127,25 @@ float NeuralNetwork::train(const float *desiredOutput, const float *input, float
 }
 
 void NeuralNetwork::update(int layerIndex) {
-
+    if (layerIndex == -1) {
+        // Dealing with the inputLayer here and propagating to the next layer
+        for (int i = 0; i < m_inputLayer->getNeuronCount(); i++) {
+            if (m_hiddenLayerCount > 0) {
+                m_hiddenLayers[0]->setLayerInput(i, m_inputLayer->getNeuron(i)->getOutput());
+            } else {
+                m_outputLayer->setLayerInput(i, m_inputLayer->getNeuron(i)->getOutput());
+            }
+        }
+    } else {
+        for (int i = 0; i < m_hiddenLayers[layerIndex]->getNeuronCount(); i++) {
+            //not the last hidden layer
+            if (layerIndex < m_hiddenLayerCount - 1) {
+                m_hiddenLayers[layerIndex + 1]->setLayerInput(i, m_hiddenLayers[layerIndex]->getNeuron(i)->getOutput());
+            } else {
+                m_outputLayer->setLayerInput(i, m_hiddenLayers[layerIndex]->getNeuron(i)->getOutput());
+            }
+        }
+    }
 }
 
 void NeuralNetwork::propagate(const float *input) {
@@ -136,7 +153,7 @@ void NeuralNetwork::propagate(const float *input) {
     // Copy the input vector to the input layer, making sure that the size "array input" has the same size of
     // input count.
     memcpy(
-            m_inputLayer->getLayerInputs(),
+        m_inputLayer->getLayerInputs(),
         input,
         m_inputLayer->getInputCount() * sizeof(float)
     );
