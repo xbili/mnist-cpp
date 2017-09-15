@@ -15,18 +15,21 @@ private:
     int neuronCount; // The total count of neurons
     float *layerInput; // The layer inputs
     int inputCount; // The total count of elements in layer input
-
 public:
     // Constructors & Destructors
-    Layer();
-
+    Layer(int inputSize, int _neuronCount);
     virtual ~Layer();
-
-    // Creates the layer and initializes memory
-    void create(int inputSize, int _neuronCount);
 
     // Calculates all neurons performing the network formula
     void calculate();
+
+    // Getters
+    Neuron **getNeurons() const;
+    Neuron *getNeuron(int i) const;
+    int getNeuronCount() const;
+    float getLayerInput(int i) const;
+    float *getLayerInputs() const;
+    int getInputCount() const;
 };
 
 

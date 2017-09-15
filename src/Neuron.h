@@ -13,15 +13,25 @@ private:
     float *deltaValues; // Neuron delta values
     float output; // Output value
     float gain; // Gain value
-    float wgain; // Weight gain value
+    float wgain;
 
 public:
     // Constructors & Destructors
-    Neuron();
+    Neuron(int inputCount);
     virtual ~Neuron();
 
-     // Allocates memory and intitializes values
-    void create(int inputCount);
+    float getWeight(int i) const;
+    float *getWeights() const;
+    float getDeltaValue(int i) const;
+    float *getDeltaValues() const;
+    float getOutput() const;
+    float getGain() const;
+    float getWgain() const;
+
+    void setOutput(float output);
+    void setWeight(int i, float weight);
+    void setDeltaValue(int i, float delta);
+    void incrementWgain(float wgain);
 };
 
 
