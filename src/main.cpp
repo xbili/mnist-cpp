@@ -3,10 +3,10 @@
 
 #define PATTERN_COUNT 4
 #define PATTERN_SIZE 2
-#define NETWORK_INPUTNEURONS 3
+#define NETWORK_INPUTNEURONS 2
 #define NETWORK_OUTPUT 1
 #define HIDDEN_LAYERS 0
-#define EPOCHS 20000
+#define EPOCHS 1000000
 
 int main() {
     // XOR input values
@@ -25,8 +25,9 @@ int main() {
         {0}
     };
 
+    int hiddenLayers[1] = { 5 };
     NeuralNetwork* net = new NeuralNetwork(PATTERN_SIZE, NETWORK_INPUTNEURONS,
-                                           NETWORK_OUTPUT, HIDDEN_LAYERS, HIDDEN_LAYERS);
+                                           NETWORK_OUTPUT, hiddenLayers, HIDDEN_LAYERS);
 
     // Start training the neural network
     float error;
@@ -36,7 +37,10 @@ int main() {
             error += net->train(expected[j], pattern[j], 0.2f, 0.1f);
         }
         error /= PATTERN_COUNT;
-        std::cout << "ERROR:" << error << "\r" << std::endl;
+
+        if (i % 10000 == 0) {
+            std::cout << "Epoch: " << i << " ERROR:" << error << "\r" << std::endl;
+        }
     }
 
     // After training...let's predict!

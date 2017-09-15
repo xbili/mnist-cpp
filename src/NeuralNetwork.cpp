@@ -36,7 +36,7 @@ float NeuralNetwork::train(const float *desiredOutput, const float *input, float
     float errorg = 0; // General quadratic error
     float errorc; // Local error
     float sum = 0, csum = 0;
-    float delta,udelta;
+    float delta, udelta;
     float output;
 
     // Begin by propagating the input
@@ -75,7 +75,7 @@ float NeuralNetwork::train(const float *desiredOutput, const float *input, float
 
     for (int i = (m_hiddenLayerCount - 1); i >= 0; i--) {
         for (int j = 0; j < m_hiddenLayers[i]->getNeuronCount(); j++) {
-            output = m_hiddenLayers[i]->getNeuron(i)->getOutput();
+            output = m_hiddenLayers[i]->getNeuron(j)->getOutput();
 
             // Calculate the error for this layer
             errorc = output * (1 - output) * sum;
@@ -101,6 +101,9 @@ float NeuralNetwork::train(const float *desiredOutput, const float *input, float
             m_hiddenLayers[i]->getNeuron(j)->incrementWgain(
                     alpha * errorc * m_hiddenLayers[i]->getNeuron(j)->getGain());
         }
+
+        sum = csum;
+        csum = 0;
     }
 
     // Process the input layer
@@ -119,7 +122,8 @@ float NeuralNetwork::train(const float *desiredOutput, const float *input, float
         }
 
         // Update the gain weight
-        m_inputLayer->getNeuron(i)->incrementWgain(alpha * errorc * m_inputLayer->getNeuron(i)->getGain());
+        m_inputLayer->getNeuron(i)->incrementWgain(
+                alpha * errorc * m_inputLayer->getNeuron(i)->getGain());
     }
 
     // return the general error divided by 2
@@ -158,9 +162,13 @@ void NeuralNetwork::propagate(const float *input) {
         m_inputLayer->getInputCount() * sizeof(float)
     );
 
+    // Calculate the input layer
     m_inputLayer->calculate();
 
+    // Propagate the input layer out values to the next layer
     update(-1);
+
+    // Calculate hidden layers
     if (m_hiddenLayers) {
         // Calculate hidden layers if any
         for (int i = 0; i < m_hiddenLayerCount; i++) {
@@ -169,5 +177,6 @@ void NeuralNetwork::propagate(const float *input) {
         }
     }
 
+    // Calculate output layer
     m_outputLayer->calculate();
 }

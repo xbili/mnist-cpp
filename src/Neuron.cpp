@@ -1,7 +1,7 @@
 //
 // Created by xbili on 9/15/17.
 //
-
+#include <iostream>
 #include <assert.h>
 #include "Neuron.h"
 
@@ -14,10 +14,10 @@ Neuron::Neuron(int inputCount) {
     weights = new float[inputCount];
     deltaValues = new float[inputCount];
 
+    gain = 1;
     random = (float(rand()) / float(RAND_MAX)) / 2.f;
     random *= sign;
     sign *= -1;
-    gain = 1;
     wgain = random;
 
     // Initialize all weights as random assigned values
