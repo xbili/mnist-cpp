@@ -12,7 +12,7 @@
 #define NETWORK_INPUTNEURONS 784
 #define NETWORK_OUTPUT 10
 #define HIDDEN_LAYERS 1
-#define EPOCHS 10
+#define EPOCHS 50
 
 void printImage(float expected, float* input);
 
@@ -44,16 +44,12 @@ int main() {
     // Start training the neural network
     float error;
     for (int i = 0; i < EPOCHS; i++) {
-        std::cout << "Epoch #" << i << std::endl;
         error = 0;
         for (int j = 0; j < TRAIN_PATTERN_COUNT; j++) {
             error += net->train(trainX[j], encodedY[j], 0.2f, 0.1f);
-            if (j % 10000 == 0) {
-                std::cout << "Done training " << j << "/" << TRAIN_PATTERN_COUNT << "(" << j / TRAIN_PATTERN_COUNT * 100 << "%)" << std::endl;
-            }
         }
         error /= TRAIN_PATTERN_COUNT;
-        std::cout << "Epoch: " << i << " ERROR:" << error << "\r" << std::endl;
+        std::cout << "Epoch #" << i << " ERROR:" << error << "\r" << std::endl;
     }
 
     std::cout << "Training complete..." << std::endl;
@@ -68,22 +64,29 @@ int main() {
 
     std::cout << "Starting prediction..." << std::endl;
 
+    int correctPredictions = 0;
+
     // After training...let's predict!
     for (int i = 0; i < TEST_PATTERN_COUNT; i++) {
         net->propagate(testX[i]);
+
         std::cout << "TESTED PATTERN " << i << " DESIRED OUTPUT: " << testY[i] << std::endl;
-        Neuron **outputNeurons = net->getOutput()->getNeurons();
+        Layer *outputLayer = net->getOutput();
 
-        float maxProb = -INFINITY;
-        float prediction = 0;
+        float sum = 0;
         for (int j = 0; j < 10; j++) {
-            float prob = outputNeurons[j]->getOutput();
-            std::cout << "P(Y = " << j << ") = " << prob << std::endl;
+            sum += exp(outputLayer->getNeuron(j)->getOutput());
+        }
 
-            if (prob > maxProb) {
-                prediction = j;
-                maxProb = prob;
-            }
+        float probs[10];
+        for (int j = 0; j < 10; j++) {
+            probs[j] = (float) exp(outputLayer->getNeuron(j)->getOutput()) / sum;
+        }
+
+        int prediction = (int) std::distance(probs, std::max_element(probs, probs + 10));
+
+        if (prediction == testY[i]) {
+            correctPredictions++;
         }
 
         std::cout << "Prediction: " << prediction << std::endl;
@@ -91,6 +94,7 @@ int main() {
     }
 
     std::cout << "Prediction complete!" << std::endl;
+    std::cout << "Correct Predictions: " << correctPredictions << std::endl;
 
     return 0;
 }

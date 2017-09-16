@@ -16,7 +16,7 @@ DataReader::DataReader(string fileName, int numColumns , int labelColumn, int nu
     // Allocate space for inputs
     m_inputs = new float*[numRows];
     for (int i = 0; i < numRows; i++) {
-        m_inputs[i] = new float[numColumns];
+        m_inputs[i] = new float[numColumns - 1];
     }
 
     // Allocate space for labels
