@@ -64,6 +64,9 @@ int main() {
     float** testX = testReader->getInputs();
     float* testY = testReader->getLabels();
 
+    Normalizer* testNormalizer = new Normalizer(testX, PATTERN_SIZE, TEST_PATTERN_COUNT);
+    float **normalizedTestX = testNormalizer->getNormalized();
+
     std::cout << "Data loading complete." << std::endl;
 
     std::cout << "Starting prediction..." << std::endl;
@@ -72,7 +75,7 @@ int main() {
 
     // After training...let's predict!
     for (int i = 0; i < TEST_PATTERN_COUNT; i++) {
-        net->propagate(testX[i]);
+        net->propagate(normalizedTestX[i]);
 
         std::cout << "TESTED PATTERN " << i << " DESIRED OUTPUT: " << testY[i] << std::endl;
         Layer *outputLayer = net->getOutput();
