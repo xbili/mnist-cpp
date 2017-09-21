@@ -34,6 +34,8 @@ public:
 
     void propagate(const float *input);
 
+    void loadWeights(float **weights);
+
     // Returns the output layer
     inline Layer* getOutput() {
         return m_outputLayer;

@@ -45,7 +45,7 @@ int main() {
     std::cout << "Training neural network..." << std::endl;
 
     // Create the neural network
-    int hiddenLayers[1] = { 16 };
+    int hiddenLayers[1] = { 512 };
     NeuralNetwork* net = new NeuralNetwork(PATTERN_SIZE, NETWORK_INPUTNEURONS,
                                            NETWORK_OUTPUT, hiddenLayers, HIDDEN_LAYERS);
 
@@ -98,7 +98,14 @@ int main() {
             probs[j] = (float) exp(outputLayer->getNeuron(j)->getOutput()) / sum;
         }
 
-        int prediction = (int) std::distance(probs, std::max_element(probs, probs + 10));
+        int prediction;
+        float maxProb = 0;
+        for (int j = 0; j < 10; j++) {
+            if (probs[j] > maxProb) {
+                prediction = j;
+                maxProb = probs[j];
+            }
+        }
 
         if (prediction == testY[i]) {
             correctPredictions++;

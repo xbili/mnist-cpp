@@ -180,3 +180,13 @@ void NeuralNetwork::propagate(const float *input) {
     // Calculate output layer
     m_outputLayer->calculate();
 }
+
+void NeuralNetwork::loadWeights(float **weights) {
+    // Set weights for hidden layers
+    for (int i = 0; i < m_hiddenLayerCount; i++) {
+        m_hiddenLayers[i]->setWeights(weights[i]);
+    }
+
+    // Set weights for output layer
+    m_outputLayer->setWeights(weights[m_hiddenLayerCount]);
+}

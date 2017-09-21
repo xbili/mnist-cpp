@@ -66,3 +66,9 @@ float Layer::getLayerInput(int i) const {
 void Layer::setLayerInput(int i, float layerInput) {
     layerInputs[i] = layerInput;
 }
+
+void Layer::setWeights(float *weights) {
+    for (int i = 0; i < neuronCount; i++) {
+        neurons[i]->setWeight(i, weights[i]);
+    }
+}
