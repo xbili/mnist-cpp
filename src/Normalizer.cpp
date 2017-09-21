@@ -7,6 +7,7 @@
 
 Normalizer::Normalizer(float** data, int features, int size) : m_data(data), m_features(features), m_size(size) {
     // Allocate space for the normalized data
+    m_normalized = new float*[size];
     for (int i = 0; i < size; i++) {
         m_normalized[i] = new float[features];
     }

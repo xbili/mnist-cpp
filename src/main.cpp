@@ -5,6 +5,7 @@
 #include "../lib/csv.h" // Figure out how to import cleanly, this is messy AF
 #include "DataReader.h"
 #include "OneHotEncoder.h"
+#include "Normalizer.h"
 
 #define TRAIN_PATTERN_COUNT 60000
 #define TEST_PATTERN_COUNT 10000
@@ -32,6 +33,9 @@ int main() {
     OneHotEncoder* encoder = new OneHotEncoder(trainY, 10, TRAIN_PATTERN_COUNT);
     float** encodedY = encoder->getEncoded();
 
+    Normalizer* normalizer = new Normalizer(trainX, PATTERN_SIZE, TRAIN_PATTERN_COUNT);
+    float** normalizedTrainX = normalizer->getNormalized();
+
     std::cout << "Encoding data complete." << std::endl;
 
     std::cout << "Training neural network..." << std::endl;
@@ -46,7 +50,7 @@ int main() {
     for (int i = 0; i < EPOCHS; i++) {
         error = 0;
         for (int j = 0; j < TRAIN_PATTERN_COUNT; j++) {
-            error += net->train(trainX[j], encodedY[j], 0.2f, 0.1f);
+            error += net->train(normalizedTrainX[j], encodedY[j], 0.2f, 0.1f);
         }
         error /= TRAIN_PATTERN_COUNT;
         std::cout << "Epoch #" << i << " ERROR:" << error << "\r" << std::endl;
