@@ -52,12 +52,16 @@ int main() {
     // Start training the neural network
     float error;
     for (int i = 0; i < EPOCHS; i++) {
+        std::cout << "Epoch #" << i << std::endl;
         error = 0;
         for (int j = 0; j < TRAIN_PATTERN_COUNT; j++) {
             error += net->train(normalizedTrainX[j], encodedY[j], 0.2f, 0.1f);
+            if (j % (TRAIN_PATTERN_COUNT / 10) == 0) {
+                std::cout << (j * 100) / TRAIN_PATTERN_COUNT << "% done!" << std::endl;
+            }
         }
         error /= TRAIN_PATTERN_COUNT;
-        std::cout << "Epoch #" << i << " ERROR:" << error << "\r" << std::endl;
+        std::cout << " ERROR:" << error << "\r" << std::endl;
     }
 
     std::cout << "Training complete..." << std::endl;
