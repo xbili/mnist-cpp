@@ -33,10 +33,14 @@ int main() {
     OneHotEncoder* encoder = new OneHotEncoder(trainY, 10, TRAIN_PATTERN_COUNT);
     float** encodedY = encoder->getEncoded();
 
+    std::cout << "Encoding data complete." << std::endl;
+
+    std::cout << "Normalizing data..." << std::endl;
+
     Normalizer* normalizer = new Normalizer(trainX, PATTERN_SIZE, TRAIN_PATTERN_COUNT);
     float** normalizedTrainX = normalizer->getNormalized();
 
-    std::cout << "Encoding data complete." << std::endl;
+    std::cout << "Normalizing data complete." << std::endl;
 
     std::cout << "Training neural network..." << std::endl;
 
@@ -107,23 +111,21 @@ int main() {
 }
 
 void printImage(float expected, float* input) {
-     for (int i = 0; i < TRAIN_PATTERN_COUNT; i++) {
-        std::cout << "===============================" << std::endl;
-        std::cout << "Expected:" << expected << std::endl;
-        std::cout << "===============================" << std::endl;
+    std::cout << "===============================" << std::endl;
+    std::cout << "Expected:" << expected << std::endl;
+    std::cout << "===============================" << std::endl;
 
-        for (int j = 0; j < 28; j++) {
-            for (int k = 0; k < 28; k++) {
-                float value = input[j*28 + k];
-                if (value != 0) {
-                    printf("x");
-                } else {
-                    printf(" ");
-                }
+    for (int j = 0; j < 28; j++) {
+        for (int k = 0; k < 28; k++) {
+            float value = input[j*28 + k];
+            if (value != 0) {
+                printf("x");
+            } else {
+                printf(" ");
             }
-            std::cout << std::endl;
         }
-
-        std::cout << "===============================" << std::endl;
+        std::cout << std::endl;
     }
+
+    std::cout << "===============================" << std::endl;
 }
