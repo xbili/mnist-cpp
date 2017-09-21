@@ -2,7 +2,7 @@
 // Created by xbili on 9/15/17.
 //
 
-#include <cmath>
+#include <math.h>
 #include <assert.h>
 #include "Layer.h"
 
