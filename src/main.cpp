@@ -12,7 +12,7 @@
 #define NETWORK_INPUTNEURONS 784
 #define NETWORK_OUTPUT 10
 #define HIDDEN_LAYERS 1
-#define EPOCHS 50
+#define EPOCHS 1
 
 void printImage(float expected, float* input);
 
@@ -37,7 +37,7 @@ int main() {
     std::cout << "Training neural network..." << std::endl;
 
     // Create the neural network
-    int hiddenLayers[1] = { 300 };
+    int hiddenLayers[1] = { 16 };
     NeuralNetwork* net = new NeuralNetwork(PATTERN_SIZE, NETWORK_INPUTNEURONS,
                                            NETWORK_OUTPUT, hiddenLayers, HIDDEN_LAYERS);
 
