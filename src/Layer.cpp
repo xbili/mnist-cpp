@@ -64,12 +64,16 @@ void Layer::setLayerInput(int i, float layerInput) {
     inputs[i] = layerInput;
 }
 
-void Layer::setWeights(float **weights) {
+void Layer::setWeights(vector<vector<float>> weights const) {
     for (int i = 0; i < neurons.size() - 1; i++) { // -1 to account for bias
         neurons[i].setWeights(weights[i]);
     }
 }
 
-void Layer::setBiasWeights(float *biasWeights) {
+void Layer::setBiasWeights(vector<float> biasWeights const) {
     neurons.end()->setWeights(biasWeights);
+}
+
+Neuron Layer::getNeuron(int i) {
+    return neurons[i];
 }

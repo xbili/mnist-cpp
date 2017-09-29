@@ -28,13 +28,14 @@ public:
     // Getters
     const vector<Neuron> &getNeurons() const;
     const vector<float> &getInputs() const;
+    Neuron getNeuron(int i);
     int getNeuronCount() const;
     int getInputCount() const;
 
     // Setters
     void setLayerInput(int i, float layerInput);
-    void setWeights(float **weights);
-    void setBiasWeights(float *biasWeights);
+    void setWeights(vector<vector<float>> weights const);
+    void setBiasWeights(vector<float> biasWeights const);
 };
 
 
