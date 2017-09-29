@@ -6,30 +6,29 @@
 #define MNIST_CPP_LAYER_H
 
 
+#include <vector>
 #include "Neuron.h"
+
+using namespace std;
 
 class Layer {
 
 private:
-    Neuron **neurons; // Array of neurons
-    int neuronCount; // The total count of neurons
-    float *layerInputs; // The layer inputs
-    int inputCount; // The total count of elements in layer input
+    vector<Neuron> neurons; // Matrix of neurons
+    vector<float> inputs; // The layer inputs
 
 public:
     // Constructors & Destructors
-    Layer(int inputSize, int _neuronCount);
+    Layer(int inputSize, int neuronCount);
     virtual ~Layer();
 
     // Calculates all neurons performing the network formula
     void calculate();
 
     // Getters
-    Neuron **getNeurons() const;
-    Neuron *getNeuron(int i) const;
+    const vector<Neuron> &getNeurons() const;
+    const vector<float> &getInputs() const;
     int getNeuronCount() const;
-    float getLayerInput(int i) const;
-    float *getLayerInputs() const;
     int getInputCount() const;
 
     // Setters
