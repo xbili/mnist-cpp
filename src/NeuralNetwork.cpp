@@ -10,24 +10,22 @@ NeuralNetwork::NeuralNetwork(
         int inputCount,
         int inputNeurons,
         int outputCount,
-        int *hiddenLayers,
+        vector<int> hiddenLayers,
         int hiddenLayerCount
 ) {
-    m_inputLayer = new Layer(inputCount, inputNeurons);
+    m_inputLayer = *(new Layer(inputCount, inputNeurons));
 
     if (hiddenLayerCount > 0) {
-        m_hiddenLayers = new Layer*[hiddenLayerCount];
-        m_hiddenLayerCount = hiddenLayerCount;
-
         // First hidden layer receives the output of the input layer
-        m_hiddenLayers[0] = new Layer(inputNeurons, hiddenLayers[0]);
+        m_hiddenLayers.push_back(*(new Layer(inputNeurons, hiddenLayers[0])));
+
         for (int i = 1; i < hiddenLayerCount; i++) {
-            m_hiddenLayers[i] = new Layer(hiddenLayers[i-1], hiddenLayers[i]);
+            m_hiddenLayers.push_back(*(new Layer(hiddenLayers[i-1], hiddenLayers[i]));
         }
 
-        m_outputLayer = new OutputLayer(hiddenLayers[hiddenLayerCount - 1], outputCount);
+        m_outputLayer = *(new OutputLayer(hiddenLayers[hiddenLayerCount - 1], outputCount));
     } else {
-        m_outputLayer = new OutputLayer(inputNeurons, outputCount);
+        m_outputLayer = *(new OutputLayer(inputNeurons, outputCount));
     }
 }
 
@@ -84,16 +82,12 @@ void NeuralNetwork::propagate(const float *input) {
     update(m_hiddenLayerCount);
 }
 
-void NeuralNetwork::setInputLayerWeights(float **weights, float *biasWeights) {
-    m_inputLayer->setWeights(weights);
-}
-
-void NeuralNetwork::setHiddenLayerWeights(int i, float **weights, float *biasWeights) {
+void NeuralNetwork::setHiddenLayerWeights(int i, vector<vector<float>> weights const, vector<float> biasWeights const) {
     m_hiddenLayers[i]->setWeights(weights);
+    m_hiddenLayers[i]->setBiasWeights(biasWeights);
 }
 
-void NeuralNetwork::setOutputLayerWeights(float **weights, float *biasWeights) {
+void NeuralNetwork::setOutputLayerWeights(vector<vector<float>> weights const, vector<float> biasWeights const) {
     m_outputLayer->setWeights(weights);
+    m_outputLayer->setBiasWeights(biasWeights);
 }
-
-
