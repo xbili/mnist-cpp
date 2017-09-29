@@ -6,15 +6,18 @@
 #define MNIST_CPP_NEURON_H
 
 
+#include <vector>
+
+using namespace std;
+
 class Neuron {
 
 private:
-    float *weights; // Neuron input weights
-    float *deltaValues; // Neuron delta values
+    vector<float> weights; // Neuron input weights
+    vector<float> deltaValues; // Neuron delta values
     float output; // Output value
     float gain; // Gain value
     float wgain;
-    int inputCount;
 
 public:
     // Constructors & Destructors
@@ -22,16 +25,14 @@ public:
     virtual ~Neuron();
 
     float getWeight(int i) const;
-    float *getWeights() const;
     float getDeltaValue(int i) const;
-    float *getDeltaValues() const;
     float getOutput() const;
     float getGain() const;
     float getWgain() const;
 
     void setOutput(float output);
     void setWeight(int i, float weight);
-    void setWeights(float *weights);
+    void setWeights(const vector<float> &weights);
     void setDeltaValue(int i, float delta);
     void incrementWgain(float wgain);
 };
