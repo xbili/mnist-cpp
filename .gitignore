@@ -82,5 +82,4 @@ crashlytics-build.properties
 fabric.properties
 
 # Data files - they can be downloaded separately
-data/train.csv
-data/test.csv
+data/*.csv
