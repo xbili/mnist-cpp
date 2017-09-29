@@ -5,14 +5,15 @@
 #include <assert.h>
 #include "Neuron.h"
 
-Neuron::Neuron(int inputCount) {
-    assert(inputCount);
+Neuron::Neuron(int _inputCount) {
+    assert(_inputCount);
 
     float sign = -1;
     float random;
 
-    weights = new float[inputCount];
-    deltaValues = new float[inputCount];
+    inputCount = _inputCount;
+    weights = new float[_inputCount];
+    deltaValues = new float[_inputCount];
 
     gain = 1;
     random = (float(rand()) / float(RAND_MAX)) / 2.f;
@@ -21,7 +22,7 @@ Neuron::Neuron(int inputCount) {
     wgain = random;
 
     // Initialize all weights as random assigned values
-    for (int i = 0; i < inputCount; i++) {
+    for (int i = 0; i < _inputCount; i++) {
         // Get a random number between -0.5 to 0.5
         random = (float(rand()) / float(RAND_MAX)) / 2.f; // min 0.5;
         random *= sign;
@@ -59,6 +60,12 @@ float Neuron::getGain() const {
 
 void Neuron::setWeight(int i, float weight) {
     weights[i] = weight;
+}
+
+void Neuron::setWeights(float* _weights) {
+    for (int i = 0; i < inputCount; i++) {
+        weights[i] = _weights[i];
+    }
 }
 
 void Neuron::setOutput(float output) {

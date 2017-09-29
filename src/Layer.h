@@ -34,7 +34,8 @@ public:
 
     // Setters
     void setLayerInput(int i, float layerInput);
-    void setWeights(float *weights);
+    void setWeights(float **weights);
+    void setBiasWeights(float *biasWeights);
 };
 
 

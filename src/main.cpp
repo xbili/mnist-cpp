@@ -16,66 +16,96 @@
 #define EPOCHS 1
 
 void printImage(float expected, float* input);
+void readLayerWeights(string filename, float **weights);
+void readBiasWeights(string filename, float *weights);
 
 int main() {
-    std::cout << "Loading training data..." << std::endl;
 
     // Read data in from CSV
-    DataReader* trainReader = new DataReader("../data/train.csv", PATTERN_SIZE + 1, 0, TRAIN_PATTERN_COUNT);
+    std::cout << "Loading training data..." << std::endl;
 
+    // Train
+    DataReader* trainReader = new DataReader("../data/train.csv", PATTERN_SIZE + 1, 0, TRAIN_PATTERN_COUNT);
     float** trainX = trainReader->getInputs();
     float* trainY = trainReader->getLabels();
 
-    std::cout << "Data loading complete." << std::endl;
-
-    std::cout << "Encoding data..." << std::endl;
-
-    OneHotEncoder* encoder = new OneHotEncoder(trainY, 10, TRAIN_PATTERN_COUNT);
-    float** encodedY = encoder->getEncoded();
-
-    std::cout << "Encoding data complete." << std::endl;
-
-    std::cout << "Normalizing data..." << std::endl;
-
-    Normalizer* normalizer = new Normalizer(trainX, PATTERN_SIZE, TRAIN_PATTERN_COUNT);
-    float** normalizedTrainX = normalizer->getNormalized();
-
-    std::cout << "Normalizing data complete." << std::endl;
-
-    std::cout << "Training neural network..." << std::endl;
-
-    // Create the neural network
-    int hiddenLayers[1] = { 512 };
-    NeuralNetwork* net = new NeuralNetwork(PATTERN_SIZE, NETWORK_INPUTNEURONS,
-                                           NETWORK_OUTPUT, hiddenLayers, HIDDEN_LAYERS);
-
-    // Start training the neural network
-    float error;
-    for (int i = 0; i < EPOCHS; i++) {
-        std::cout << "Epoch #" << i << std::endl;
-        error = 0;
-        for (int j = 0; j < TRAIN_PATTERN_COUNT; j++) {
-            error += net->train(normalizedTrainX[j], encodedY[j], 0.2f, 0.1f);
-            if (j % (TRAIN_PATTERN_COUNT / 10) == 0) {
-                std::cout << (j * 100) / TRAIN_PATTERN_COUNT << "% done!" << std::endl;
-            }
-        }
-        error /= TRAIN_PATTERN_COUNT;
-        std::cout << " ERROR:" << error << "\r" << std::endl;
-    }
-
-    std::cout << "Training complete..." << std::endl;
-
-    std::cout << "Loading test data..." << std::endl;
-
+    // Test
     DataReader* testReader = new DataReader("../data/test.csv", PATTERN_SIZE + 1, 0, TEST_PATTERN_COUNT);
     float** testX = testReader->getInputs();
     float* testY = testReader->getLabels();
 
+    std::cout << "Data loading complete." << std::endl;
+
+
+
+
+
+    /************************
+     * Normalize input data *
+     ************************/
+    std::cout << "Normalizing data..." << std::endl;
+
+    // Train
+    Normalizer* normalizer = new Normalizer(trainX, PATTERN_SIZE, TRAIN_PATTERN_COUNT);
+    float** normalizedTrainX = normalizer->getNormalized();
+
+    // Test
     Normalizer* testNormalizer = new Normalizer(testX, PATTERN_SIZE, TEST_PATTERN_COUNT);
     float **normalizedTestX = testNormalizer->getNormalized();
 
-    std::cout << "Data loading complete." << std::endl;
+    std::cout << "Normalizing data complete." << std::endl;
+
+    /*************************
+     * One-hot encode labels *
+     *************************/
+
+    std::cout << "Encoding data..." << std::endl;
+
+    // Train
+    OneHotEncoder* trainEncoder = new OneHotEncoder(trainY, 10, TRAIN_PATTERN_COUNT);
+    float** encodedTrainY = trainEncoder->getEncoded();
+
+    // Test
+    OneHotEncoder* testEncoder = new OneHotEncoder(testY, 10, TEST_PATTERN_COUNT);
+    float** encodedTestY = testEncoder->getEncoded();
+
+    std::cout << "Encoding data complete." << std::endl;
+
+    /**
+     * Load pre-trained weights from Keras.
+     */
+    int hiddenLayers[1] = { 512 };
+    NeuralNetwork* net = new NeuralNetwork(
+            PATTERN_SIZE,
+            NETWORK_INPUTNEURONS,
+            NETWORK_OUTPUT,
+            hiddenLayers,
+            HIDDEN_LAYERS
+    );
+
+    // Load weights
+    float **layer1Weights = new float*[784];
+    for (int i = 0; i < 784; i++) {
+        layer1Weights[i] = new float[512];
+    }
+    float *layer1BiasWeights = new float[512];
+
+    float **outputLayerWeights = new float*[512];
+    for (int i = 0; i < 784; i++) {
+        outputLayerWeights[i] = new float[10];
+    }
+    float *outputLayerBiasWeights = new float[10];
+
+
+    // Read in the weights
+    readLayerWeights("../data/hidden_layer_weights.csv", layer1Weights);
+    readLayerWeights("../data/output_layer_weights.csv", outputLayerWeights);
+
+    readBiasWeights("../data/hidden_layer_bias_weights.csv", layer1BiasWeights);
+    readBiasWeights("../data/output_layer_bias_weights.csv", outputLayerBiasWeights);
+
+    net->setHiddenLayerWeights(0, layer1Weights, layer1BiasWeights);
+    net->setOutputLayerWeights(outputLayerWeights, outputLayerBiasWeights);
 
     std::cout << "Starting prediction..." << std::endl;
 
@@ -85,25 +115,16 @@ int main() {
     for (int i = 0; i < TEST_PATTERN_COUNT; i++) {
         net->propagate(normalizedTestX[i]);
 
-        std::cout << "TESTED PATTERN " << i << " DESIRED OUTPUT: " << testY[i] << std::endl;
+        // std::cout << "TESTED PATTERN " << i << " DESIRED OUTPUT: " << testY[i] << std::endl;
         Layer *outputLayer = net->getOutput();
-
-        float sum = 0;
-        for (int j = 0; j < 10; j++) {
-            sum += exp(outputLayer->getNeuron(j)->getOutput());
-        }
-
-        float probs[10];
-        for (int j = 0; j < 10; j++) {
-            probs[j] = (float) exp(outputLayer->getNeuron(j)->getOutput()) / sum;
-        }
 
         int prediction;
         float maxProb = 0;
         for (int j = 0; j < 10; j++) {
-            if (probs[j] > maxProb) {
+            float curr = outputLayer->getNeuron(j)->getOutput();
+            if (curr > maxProb) {
+                maxProb = curr;
                 prediction = j;
-                maxProb = probs[j];
             }
         }
 
@@ -111,8 +132,10 @@ int main() {
             correctPredictions++;
         }
 
+        /*
         std::cout << "Prediction: " << prediction << std::endl;
         std::cout << "===================================" << std::endl;
+         */
     }
 
     std::cout << "Prediction complete!" << std::endl;
@@ -139,4 +162,48 @@ void printImage(float expected, float* input) {
     }
 
     std::cout << "===============================" << std::endl;
+}
+
+void readLayerWeights(string filename, float **weights) {
+    io::LineReader* reader = new io::LineReader(filename);
+    int rowNum = 0;
+    while (char* line = reader->next_line()) {
+        std::vector<char*> row;
+        row.push_back(line);
+        while (*line != '\0') {
+            if (*line == ',') {
+                *line = '\0';
+                row.push_back(line+1);
+            }
+            line++;
+        }
+
+        for (int i = 0; i < row.size(); i++) {
+            weights[rowNum][i] = strtof(row.at(i), NULL);
+        }
+
+        rowNum++;
+    }
+}
+
+void readBiasWeights(string filename, float *weights) {
+    io::LineReader* reader = new io::LineReader(filename);
+    int rowNum = 0;
+    while (char* line = reader->next_line()) {
+        std::vector<char*> row;
+        row.push_back(line);
+        while (*line != '\0') {
+            if (*line == ',') {
+                *line = '\0';
+                row.push_back(line+1);
+            }
+            line++;
+        }
+
+        for (int i = 0; i < row.size(); i++) {
+            weights[i] = strtof(row.at(i), NULL);
+        }
+
+        rowNum++;
+    }
 }

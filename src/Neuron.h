@@ -14,10 +14,11 @@ private:
     float output; // Output value
     float gain; // Gain value
     float wgain;
+    int inputCount;
 
 public:
     // Constructors & Destructors
-    Neuron(int inputCount);
+    Neuron(int _inputCount);
     virtual ~Neuron();
 
     float getWeight(int i) const;
@@ -30,6 +31,7 @@ public:
 
     void setOutput(float output);
     void setWeight(int i, float weight);
+    void setWeights(float *weights);
     void setDeltaValue(int i, float delta);
     void incrementWgain(float wgain);
 };

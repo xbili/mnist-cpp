@@ -7,11 +7,12 @@
 
 
 #include "Layer.h"
+#include "OutputLayer.h"
 
 class NeuralNetwork {
 private:
     Layer *m_inputLayer; // Input layer of the network
-    Layer *m_outputLayer; // Output layer - contains the result of applying the network on a set of inputs
+    OutputLayer *m_outputLayer; // Output layer - contains the result of applying the network on a set of inputs
     Layer **m_hiddenLayers; // Additional hidden layers
     int m_hiddenLayerCount; // Number of additional hidden layers
 
@@ -26,15 +27,11 @@ public:
     );
     virtual ~NeuralNetwork();
 
-    // Updates the weight values of the network given a desired output and applying the backpropagation algorithm
-    float train(const float *desiredOutput, const float *input, float alpha, float momentum);
-
-    // Updates the next layer input values
     void update(int layerIndex);
-
     void propagate(const float *input);
-
-    void loadWeights(float **weights);
+    void setInputLayerWeights(float **weights, float *biasWeights);
+    void setHiddenLayerWeights(int i, float **weights, float *biasWeights);
+    void setOutputLayerWeights(float **weights, float *biasWeights);
 
     // Returns the output layer
     inline Layer* getOutput() {
