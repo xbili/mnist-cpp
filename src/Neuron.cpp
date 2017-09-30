@@ -52,6 +52,10 @@ void Neuron::setWeight(int i, float weight) {
     weights[i] = weight;
 }
 
+void Neuron::setWeights(const vector<float> &weights) {
+    Neuron::weights = weights;
+}
+
 void Neuron::setOutput(float output) {
     Neuron::output = output;
 }
@@ -66,8 +70,4 @@ void Neuron::setDeltaValue(int i, float delta) {
 
 void Neuron::incrementWgain(float value) {
     wgain += value;
-}
-
-void Neuron::setWeights(const vector<float> &weights) {
-    Neuron::weights = weights;
 }

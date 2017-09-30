@@ -15,9 +15,9 @@ class Neuron {
 private:
     vector<float> weights; // Neuron input weights
     vector<float> deltaValues; // Neuron delta values
-    float output; // Output value
-    float gain; // Gain value
-    float wgain;
+    float output = 0; // Output value
+    float gain = 0; // Gain value
+    float wgain = 0;
 
 public:
     // Constructors & Destructors
