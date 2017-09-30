@@ -4,32 +4,37 @@
 
 #include <cstring>
 #include "NeuralNetwork.h"
-#include "OutputLayer.h"
 
 NeuralNetwork::NeuralNetwork(
         int inputCount,
         int inputNeurons,
         int outputCount,
-        vector<int> hiddenLayers,
-        int hiddenLayerCount
+        vector<int> hiddenLayers
 ) {
-    m_inputLayer = *(new Layer(inputCount, inputNeurons));
+    m_inputLayer = new Layer(inputCount, inputNeurons);
 
-    if (hiddenLayerCount > 0) {
+    if (hiddenLayers.size() > 0) {
         // First hidden layer receives the output of the input layer
-        m_hiddenLayers.push_back(*(new Layer(inputNeurons, hiddenLayers[0])));
+        m_hiddenLayers.push_back(new Layer(inputNeurons, hiddenLayers[0]));
 
-        for (int i = 1; i < hiddenLayerCount; i++) {
-            m_hiddenLayers.push_back(*(new Layer(hiddenLayers[i-1], hiddenLayers[i]));
+        for (int i = 1; i < hiddenLayers.size(); i++) {
+            m_hiddenLayers.push_back(new Layer(hiddenLayers[i-1], hiddenLayers[i]));
         }
 
-        m_outputLayer = *(new OutputLayer(hiddenLayers[hiddenLayerCount - 1], outputCount));
+        m_outputLayer = new OutputLayer(hiddenLayers.back(), outputCount);
     } else {
-        m_outputLayer = *(new OutputLayer(inputNeurons, outputCount));
+        m_outputLayer = new OutputLayer(inputNeurons, outputCount);
     }
 }
 
-NeuralNetwork::~NeuralNetwork() {}
+NeuralNetwork::~NeuralNetwork() {
+    for (int i = 0; m_hiddenLayers.size(); i++) {
+        delete(m_hiddenLayers[i]);
+    }
+
+    delete(m_inputLayer);
+    delete(m_outputLayer);
+}
 
 void NeuralNetwork::update(int layerIndex) {
     if (layerIndex == -1) { // Input layer update
@@ -65,7 +70,7 @@ void NeuralNetwork::update(int layerIndex) {
     }
 }
 
-void NeuralNetwork::propagate(const float *input) {
+void NeuralNetwork::propagate(vector<float> input const) {
     // Set input layer values
     for (int i = 0; i < m_inputLayer->getInputCount(); i++) {
         m_inputLayer->setLayerInput(i, input[i]);
