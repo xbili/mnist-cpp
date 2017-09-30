@@ -10,14 +10,12 @@
 #define TRAIN_PATTERN_COUNT 60000
 #define TEST_PATTERN_COUNT 10000
 #define PATTERN_SIZE 784
-#define NETWORK_INPUTNEURONS 784
+#define NETWORK_INPUT_NEURONS 784
 #define NETWORK_OUTPUT 10
-#define HIDDEN_LAYERS 1
-#define EPOCHS 1
 
 void printImage(float expected, float* input);
-void readLayerWeights(string filename, float **weights);
-void readBiasWeights(string filename, float *weights);
+vector<vector<float>> readLayerWeights(string filename);
+vector<float> readBiasWeights(string filename);
 
 int main() {
 
@@ -37,9 +35,6 @@ int main() {
     std::cout << "Data loading complete." << std::endl;
 
 
-
-
-
     /************************
      * Normalize input data *
      ************************/
@@ -54,6 +49,7 @@ int main() {
     float **normalizedTestX = testNormalizer->getNormalized();
 
     std::cout << "Normalizing data complete." << std::endl;
+
 
     /*************************
      * One-hot encode labels *
@@ -74,35 +70,20 @@ int main() {
     /**
      * Load pre-trained weights from Keras.
      */
-    int hiddenLayers[1] = { 512 };
+    vector<int> hiddenLayers = { 512 };
     NeuralNetwork* net = new NeuralNetwork(
             PATTERN_SIZE,
-            NETWORK_INPUTNEURONS,
+            NETWORK_INPUT_NEURONS,
             NETWORK_OUTPUT,
-            hiddenLayers,
-            HIDDEN_LAYERS
+            hiddenLayers
     );
 
-    // Load weights
-    float **layer1Weights = new float*[784];
-    for (int i = 0; i < 784; i++) {
-        layer1Weights[i] = new float[512];
-    }
-    float *layer1BiasWeights = new float[512];
-
-    float **outputLayerWeights = new float*[512];
-    for (int i = 0; i < 784; i++) {
-        outputLayerWeights[i] = new float[10];
-    }
-    float *outputLayerBiasWeights = new float[10];
-
-
     // Read in the weights
-    readLayerWeights("../data/hidden_layer_weights.csv", layer1Weights);
-    readLayerWeights("../data/output_layer_weights.csv", outputLayerWeights);
+    vector<vector<float>> layer1Weights = readLayerWeights("../data/hidden_layer_weights.csv");
+    vector<vector<float>> outputLayerWeights = readLayerWeights("../data/output_layer_weights.csv");
 
-    readBiasWeights("../data/hidden_layer_bias_weights.csv", layer1BiasWeights);
-    readBiasWeights("../data/output_layer_bias_weights.csv", outputLayerBiasWeights);
+    vector<float> layer1BiasWeights = readBiasWeights("../data/hidden_layer_bias_weights.csv");
+    vector<float> outputLayerBiasWeights = readBiasWeights("../data/output_layer_bias_weights.csv");
 
     net->setHiddenLayerWeights(0, layer1Weights, layer1BiasWeights);
     net->setOutputLayerWeights(outputLayerWeights, outputLayerBiasWeights);
@@ -164,12 +145,16 @@ void printImage(float expected, float* input) {
     std::cout << "===============================" << std::endl;
 }
 
-void readLayerWeights(string filename, float **weights) {
+vector<vector<float>> readLayerWeights(string filename) {
+    vector<vector<float>> results;
     io::LineReader* reader = new io::LineReader(filename);
     int rowNum = 0;
     while (char* line = reader->next_line()) {
-        std::vector<char*> row;
+        vector<float> weights;
+        vector<char*> row;
+
         row.push_back(line);
+
         while (*line != '\0') {
             if (*line == ',') {
                 *line = '\0';
@@ -179,14 +164,18 @@ void readLayerWeights(string filename, float **weights) {
         }
 
         for (int i = 0; i < row.size(); i++) {
-            weights[rowNum][i] = strtof(row.at(i), NULL);
+            weights.push_back(strtof(row.at(i), NULL));
         }
+
+        results.push_back(weights);
 
         rowNum++;
     }
 }
 
-void readBiasWeights(string filename, float *weights) {
+vector<float> readBiasWeights(string filename) {
+    vector<float> weights;
+
     io::LineReader* reader = new io::LineReader(filename);
     int rowNum = 0;
     while (char* line = reader->next_line()) {
@@ -201,9 +190,11 @@ void readBiasWeights(string filename, float *weights) {
         }
 
         for (int i = 0; i < row.size(); i++) {
-            weights[i] = strtof(row.at(i), NULL);
+            weights.push_back(strtof(row.at(i), NULL));
         }
 
         rowNum++;
     }
+
+    return weights;
 }
