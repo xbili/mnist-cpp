@@ -4,6 +4,7 @@
 
 #include <cstring>
 #include "NeuralNetwork.h"
+#include "InputLayer.h"
 
 NeuralNetwork::NeuralNetwork(
         int inputCount,
@@ -11,7 +12,7 @@ NeuralNetwork::NeuralNetwork(
         int outputCount,
         vector<int> hiddenLayers
 ) {
-    m_inputLayer = new Layer(inputCount, inputNeurons);
+    m_inputLayer = new InputLayer(inputCount, inputNeurons);
 
     if (hiddenLayers.size() > 0) {
         // First hidden layer receives the output of the input layer

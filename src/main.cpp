@@ -96,11 +96,19 @@ int main() {
     for (int i = 0; i < TEST_PATTERN_COUNT; i++) {
         net->propagate(normalizedTestX[i]);
 
-        // std::cout << "TESTED PATTERN " << i << " DESIRED OUTPUT: " << testY[i] << std::endl;
+        std::cout << "DESIRED OUTPUT: " << testY[i] << std::endl;
         Layer *outputLayer = net->getOutput();
 
         int prediction;
         float maxProb = 0;
+
+        // Print output layer
+        for (int j = 0; j < 10; j++) {
+            float curr = outputLayer->getNeuron(j)->getOutput();
+            std::cout << curr << " ";
+        }
+        std::cout << std::endl;
+
         for (int j = 0; j < 10; j++) {
             float curr = outputLayer->getNeuron(j)->getOutput();
             if (curr > maxProb) {
@@ -112,11 +120,6 @@ int main() {
         if (prediction == testY[i]) {
             correctPredictions++;
         }
-
-        /*
-        std::cout << "Prediction: " << prediction << std::endl;
-        std::cout << "===================================" << std::endl;
-         */
     }
 
     std::cout << "Prediction complete!" << std::endl;
