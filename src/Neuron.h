@@ -32,7 +32,7 @@ public:
 
     void setOutput(float output);
     void setWeight(int i, float weight);
-    void setWeights(const vector<float> &weights);
+    void setWeights(const vector<float> weights);
     void setDeltaValue(int i, float delta);
     void incrementWgain(float wgain);
 };

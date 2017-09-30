@@ -52,8 +52,10 @@ void Neuron::setWeight(int i, float weight) {
     weights[i] = weight;
 }
 
-void Neuron::setWeights(const vector<float> &weights) {
-    Neuron::weights = weights;
+void Neuron::setWeights(const vector<float> weights) {
+    for (int i = 0; i < weights.size(); i++) {
+        Neuron::weights[i] = weights[i];
+    }
 }
 
 void Neuron::setOutput(float output) {
