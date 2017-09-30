@@ -14,7 +14,6 @@ private:
     Layer *m_inputLayer; // Input layer of the network
     OutputLayer *m_outputLayer; // Output layer - contains the result of applying the network on a set of inputs
     vector<Layer*> m_hiddenLayers; // Additional hidden layers
-    int m_hiddenLayerCount; // Number of additional hidden layers
 
 public:
     // Constructors & Destructors

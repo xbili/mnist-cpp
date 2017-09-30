@@ -40,7 +40,7 @@ void NeuralNetwork::update(int layerIndex) {
     if (layerIndex == -1) { // Input layer update
         m_inputLayer->calculate();
 
-        if (m_hiddenLayerCount > 0) {
+        if (m_hiddenLayers.size() > 0) {
             // Push input layer outputs to first hidden layer inputs
             for (int i = 0; i < m_hiddenLayers[0]->getInputCount(); i++) {
                 m_hiddenLayers[0]->setLayerInput(i, m_inputLayer->getNeuron(i)->getOutput());
@@ -51,10 +51,10 @@ void NeuralNetwork::update(int layerIndex) {
                 m_outputLayer->setLayerInput(i, m_inputLayer->getNeuron(i)->getOutput());
             }
         }
-    } else if (layerIndex < m_hiddenLayerCount) { // Hidden layer update
+    } else if (layerIndex < m_hiddenLayers.size()) { // Hidden layer update
         m_hiddenLayers[layerIndex]->calculate();
 
-        if (layerIndex + 1 >= m_hiddenLayerCount) {
+        if (layerIndex + 1 >= m_hiddenLayers.size()) {
             // Push outputs to the output layer inputs
             for (int i = 0; i < m_outputLayer->getInputCount(); i++) {
                 m_outputLayer->setLayerInput(i, m_hiddenLayers[layerIndex]->getNeuron(i)->getOutput());
@@ -79,12 +79,12 @@ void NeuralNetwork::propagate(vector<float> input) {
     update(-1); // Propagate the input layer first
 
     // Then propagate the hidden layers
-    for (int i = 0; i < m_hiddenLayerCount; i++) {
+    for (int i = 0; i < m_hiddenLayers.size(); i++) {
         update(i);
     }
 
     // Last but not least, propagate the output layer (last layer)
-    update(m_hiddenLayerCount);
+    update(m_hiddenLayers.size());
 }
 
 void NeuralNetwork::setHiddenLayerWeights(int i, vector<vector<float>> weights, vector<float> biasWeights) {
