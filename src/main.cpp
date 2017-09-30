@@ -41,12 +41,12 @@ int main() {
     std::cout << "Normalizing data..." << std::endl;
 
     // Train
-    Normalizer* normalizer = new Normalizer(trainX, PATTERN_SIZE, TRAIN_PATTERN_COUNT);
-    float** normalizedTrainX = normalizer->getNormalized();
+    Normalizer* normalizer = new Normalizer(trainX);
+    vector<vector<float>> normalizedTrainX = normalizer->getNormalized();
 
     // Test
-    Normalizer* testNormalizer = new Normalizer(testX, PATTERN_SIZE, TEST_PATTERN_COUNT);
-    float **normalizedTestX = testNormalizer->getNormalized();
+    Normalizer* testNormalizer = new Normalizer(testX);
+    vector<vector<float>> normalizedTestX = testNormalizer->getNormalized();
 
     std::cout << "Normalizing data complete." << std::endl;
 

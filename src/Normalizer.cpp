@@ -5,32 +5,25 @@
 
 #include "Normalizer.h"
 
-Normalizer::Normalizer(float** data, int features, int size) : m_data(data), m_features(features), m_size(size) {
-    // Allocate space for the normalized data
-    m_normalized = new float*[size];
-    for (int i = 0; i < size; i++) {
-        m_normalized[i] = new float[features];
-    }
-
+Normalizer::Normalizer(vector<vector<float>> data) : m_data(data) {
     normalize();
 }
 
-float **Normalizer::getNormalized() {
+vector<vector<float>> Normalizer::getNormalized() {
     return m_normalized;
 }
 
 void Normalizer::normalize() {
-    for (int i = 0; i < m_size; i++) {
-        float max = *std::max_element(m_data[i], m_data[i] + m_features);
-        float min = *std::min_element(m_data[i], m_data[i] + m_features);
+    for (int i = 0; i < m_data.size(); i++) {
+        float max = *max_element(m_data[i].begin(), m_data[i].end());
+        float min = *min_element(m_data[i].begin(), m_data[i].end());
 
-        // Update the value in each row to be equals to the normalized value
-        for (int j= 0; j < m_features; j++) {
-            if (max == min) {
-                m_normalized[i][j] = 0;
-                continue;
-            }
-            m_normalized[i][j] = (m_data[i][j] - min) / (max - min);
+        vector<float> row;
+        for (int j = 0; j < m_data[i].size(); j++) {
+            float res = (m_data[i][j] - min) / (max - min);
+            m_normalized[i].push_back(res);
         }
+
+        m_normalized.push_back(row);
     }
 }
