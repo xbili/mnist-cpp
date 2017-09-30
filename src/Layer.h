@@ -14,7 +14,7 @@ using namespace std;
 class Layer {
 
 private:
-    vector<Neuron> neurons; // Matrix of neurons
+    vector<Neuron*> neurons; // Matrix of neurons
     vector<float> inputs; // The layer inputs
 
 public:
@@ -26,9 +26,9 @@ public:
     void calculate();
 
     // Getters
-    const vector<Neuron> &getNeurons() const;
+    const vector<Neuron*> &getNeurons() const;
     const vector<float> &getInputs() const;
-    Neuron getNeuron(int i);
+    Neuron* getNeuron(int i);
     int getNeuronCount() const;
     int getInputCount() const;
 
