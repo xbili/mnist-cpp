@@ -6,7 +6,7 @@ enable_testing()
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
-set(TEST_FILES gtest.cpp NeuronTests.cpp)
+set(TEST_FILES gtest.cpp NeuronTests.cpp LayerTests.cpp)
 
 include_directories(/usr/local/include)
 add_executable(mnist_cpp_test ${TEST_FILES})
