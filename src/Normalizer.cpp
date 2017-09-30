@@ -21,7 +21,7 @@ void Normalizer::normalize() {
         vector<float> row;
         for (int j = 0; j < m_data[i].size(); j++) {
             float res = (m_data[i][j] - min) / (max - min);
-            m_normalized[i].push_back(res);
+            row.push_back(res);
         }
 
         m_normalized.push_back(row);

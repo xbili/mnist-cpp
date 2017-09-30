@@ -59,11 +59,11 @@ int main() {
 
     // Train
     OneHotEncoder* trainEncoder = new OneHotEncoder(trainY, 10, TRAIN_PATTERN_COUNT);
-    float** encodedTrainY = trainEncoder->getEncoded();
+    vector<vector<float>> encodedTrainY = trainEncoder->getEncoded();
 
     // Test
     OneHotEncoder* testEncoder = new OneHotEncoder(testY, 10, TEST_PATTERN_COUNT);
-    float** encodedTestY = testEncoder->getEncoded();
+    vector<vector<float>> encodedTestY = testEncoder->getEncoded();
 
     std::cout << "Encoding data complete." << std::endl;
 
@@ -171,6 +171,8 @@ vector<vector<float>> readLayerWeights(string filename) {
 
         rowNum++;
     }
+
+    return results;
 }
 
 vector<float> readBiasWeights(string filename) {
