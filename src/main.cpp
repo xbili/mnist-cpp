@@ -23,14 +23,14 @@ int main() {
     std::cout << "Loading training data..." << std::endl;
 
     // Train
-    DataReader* trainReader = new DataReader("../data/train.csv", PATTERN_SIZE + 1, 0, TRAIN_PATTERN_COUNT);
-    float** trainX = trainReader->getInputs();
-    float* trainY = trainReader->getLabels();
+    DataReader* trainReader = new DataReader("../data/train.csv");
+    vector<vector<float>> trainX = trainReader->getInputs();
+    vector<float> trainY = trainReader->getLabels();
 
     // Test
-    DataReader* testReader = new DataReader("../data/test.csv", PATTERN_SIZE + 1, 0, TEST_PATTERN_COUNT);
-    float** testX = testReader->getInputs();
-    float* testY = testReader->getLabels();
+    DataReader* testReader = new DataReader("../data/test.csv");
+    vector<vector<float>> testX = testReader->getInputs();
+    vector<float> testY = testReader->getLabels();
 
     std::cout << "Data loading complete." << std::endl;
 
