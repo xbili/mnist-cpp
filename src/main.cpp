@@ -23,12 +23,12 @@ int main() {
     std::cout << "Loading training data..." << std::endl;
 
     // Train
-    DataReader* trainReader = new DataReader("../data/train.csv");
+    DataReader* trainReader = new DataReader("../../data/train.csv");
     vector<vector<float>> trainX = trainReader->getInputs();
     vector<float> trainY = trainReader->getLabels();
 
     // Test
-    DataReader* testReader = new DataReader("../data/test.csv");
+    DataReader* testReader = new DataReader("../../data/test.csv");
     vector<vector<float>> testX = testReader->getInputs();
     vector<float> testY = testReader->getLabels();
 
@@ -79,11 +79,11 @@ int main() {
     );
 
     // Read in the weights
-    vector<vector<float>> layer1Weights = readLayerWeights("../data/hidden_layer_weights.csv");
-    vector<vector<float>> outputLayerWeights = readLayerWeights("../data/output_layer_weights.csv");
+    vector<vector<float>> layer1Weights = readLayerWeights("../../data/hidden_layer_weights.csv");
+    vector<vector<float>> outputLayerWeights = readLayerWeights("../../data/output_layer_weights.csv");
 
-    vector<float> layer1BiasWeights = readBiasWeights("../data/hidden_layer_bias_weights.csv");
-    vector<float> outputLayerBiasWeights = readBiasWeights("../data/output_layer_bias_weights.csv");
+    vector<float> layer1BiasWeights = readBiasWeights("../../data/hidden_layer_bias_weights.csv");
+    vector<float> outputLayerBiasWeights = readBiasWeights("../../data/output_layer_bias_weights.csv");
 
     net->setHiddenLayerWeights(0, layer1Weights, layer1BiasWeights);
     net->setOutputLayerWeights(outputLayerWeights, outputLayerBiasWeights);

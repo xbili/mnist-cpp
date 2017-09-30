@@ -1,0 +1,2 @@
+set(SOURCE_FILES main.cpp Neuron.cpp Neuron.h Layer.cpp Layer.h NeuralNetwork.cpp NeuralNetwork.h ../lib/csv.h DataReader.cpp DataReader.h OneHotEncoder.cpp OneHotEncoder.h Normalizer.cpp Normalizer.h OutputLayer.cpp OutputLayer.h InputLayer.cpp InputLayer.h)
+add_executable(mnist_cpp ${SOURCE_FILES})
