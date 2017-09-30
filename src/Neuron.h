@@ -21,7 +21,7 @@ private:
 
 public:
     // Constructors & Destructors
-    Neuron(int _inputCount);
+    Neuron(int inputCount);
     virtual ~Neuron();
 
     float getWeight(int i) const;
