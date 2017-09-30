@@ -27,9 +27,9 @@ public:
     virtual ~NeuralNetwork();
 
     void update(int layerIndex);
-    void propagate(vector<float> input const);
-    void setHiddenLayerWeights(int i, vector<vector<float>> weights const, vector<float> biasWeights const);
-    void setOutputLayerWeights(vector<vector<float>> weights const, vector<float> biasWeights const);
+    void propagate(vector<float> input);
+    void setHiddenLayerWeights(int i, vector<vector<float>> weights, vector<float> biasWeights);
+    void setOutputLayerWeights(vector<vector<float>> weights, vector<float> biasWeights);
 
     // Returns the output layer
     inline Layer* getOutput() {

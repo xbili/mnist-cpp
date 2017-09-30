@@ -70,7 +70,7 @@ void NeuralNetwork::update(int layerIndex) {
     }
 }
 
-void NeuralNetwork::propagate(vector<float> input const) {
+void NeuralNetwork::propagate(vector<float> input) {
     // Set input layer values
     for (int i = 0; i < m_inputLayer->getInputCount(); i++) {
         m_inputLayer->setLayerInput(i, input[i]);
@@ -87,12 +87,12 @@ void NeuralNetwork::propagate(vector<float> input const) {
     update(m_hiddenLayerCount);
 }
 
-void NeuralNetwork::setHiddenLayerWeights(int i, vector<vector<float>> weights const, vector<float> biasWeights const) {
+void NeuralNetwork::setHiddenLayerWeights(int i, vector<vector<float>> weights, vector<float> biasWeights) {
     m_hiddenLayers[i]->setWeights(weights);
     m_hiddenLayers[i]->setBiasWeights(biasWeights);
 }
 
-void NeuralNetwork::setOutputLayerWeights(vector<vector<float>> weights const, vector<float> biasWeights const) {
+void NeuralNetwork::setOutputLayerWeights(vector<vector<float>> weights, vector<float> biasWeights) {
     m_outputLayer->setWeights(weights);
     m_outputLayer->setBiasWeights(biasWeights);
 }
