@@ -13,7 +13,7 @@
 #define NETWORK_INPUT_NEURONS 784
 #define NETWORK_OUTPUT 10
 
-void printImage(float expected, float* input);
+void printImage(float expected, vector<float> input);
 vector<vector<float>> readLayerWeights(string filename);
 vector<float> readBiasWeights(string filename);
 
@@ -96,8 +96,9 @@ int main() {
     for (int i = 0; i < TEST_PATTERN_COUNT; i++) {
         net->propagate(normalizedTestX[i]);
 
-        std::cout << "DESIRED OUTPUT: " << testY[i] << std::endl;
         Layer *outputLayer = net->getOutput();
+
+        printImage(testY[i], normalizedTestX[i]);
 
         int prediction;
         float maxProb = 0;
@@ -117,6 +118,8 @@ int main() {
             }
         }
 
+        std::cout << "Prediction: " << prediction << std::endl;
+
         if (prediction == testY[i]) {
             correctPredictions++;
         }
@@ -128,7 +131,7 @@ int main() {
     return 0;
 }
 
-void printImage(float expected, float* input) {
+void printImage(float expected, vector<float> input) {
     std::cout << "===============================" << std::endl;
     std::cout << "Expected:" << expected << std::endl;
     std::cout << "===============================" << std::endl;

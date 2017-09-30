@@ -8,10 +8,11 @@
 
 #include "Layer.h"
 #include "OutputLayer.h"
+#include "InputLayer.h"
 
 class NeuralNetwork {
 private:
-    Layer *m_inputLayer; // Input layer of the network
+    InputLayer *m_inputLayer; // Input layer of the network
     OutputLayer *m_outputLayer; // Output layer - contains the result of applying the network on a set of inputs
     vector<Layer*> m_hiddenLayers; // Additional hidden layers
 
