@@ -32,10 +32,10 @@ void Layer::calculate() {
     float sum;
 
     // Apply the formula for each neuron
-    for (int i = 0; i < neurons.size(); i++) { // +1 for bias neuron
+    for (int i = 0; i < neurons.size(); i++) {
         // TODO: This is the dot product function to replace!
         sum = 0;
-        for (int j = 0; j < neurons.size(); j++) {
+        for (int j = 0; j < getInputCount(); j++) {
             sum += neurons[i]->getWeight(j) * inputs[j];
         }
 
