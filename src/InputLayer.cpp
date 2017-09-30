@@ -17,4 +17,6 @@ void InputLayer::calculate() {
 }
 
 InputLayer::InputLayer(int inputSize, int _neuronCount) : Layer(inputSize, _neuronCount) {
+    // Remove the bias neuron for input layer.
+    neurons.pop_back();
 }

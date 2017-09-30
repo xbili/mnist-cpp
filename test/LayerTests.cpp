@@ -65,5 +65,51 @@ TEST_F(LayerTests, SetLayerWeights) {
     }
 }
 
-TEST_F(LayerTests, CalculateLayer) {
+TEST_F(LayerTests, CalculateAllPositiveLayer) {
+    vector<float> inputs = { 0.1, 0.2, 0.3, 0.4 };
+    vector<vector<float>> weights = {
+            { 0.1, 0.2, 0.3, 0.4 },
+            { 0.5, 0.6, 0.7, 0.8 },
+            { 0.9, 1.0, 1.1, 1.2 },
+            { 1.3, 1.4, 1.5, 1.6 }
+    };
+
+    vector<float> biasWeights = { 0.1, 0.2, 0.3, 0.4 };
+
+    for (int i = 0; i < inputs.size(); i++) {
+        layer->setLayerInput(i, inputs[i]);
+    }
+    layer->setWeights(weights);
+    layer->setBiasWeights(biasWeights);
+    layer->calculate();
+
+    vector<float> expected = { 0.3, 0.7, 1.1, 1.5, 1 };
+    for (int i = 0; i < expected.size(); i++) {
+        ASSERT_FLOAT_EQ(layer->getNeuron(i)->getOutput(), expected[i]);
+    }
+}
+
+
+TEST_F(LayerTests, CalculateNegativesLayer) {
+    vector<float> inputs = { 0.1, 0.2, 0.3, 0.4 };
+    vector<vector<float>> weights = {
+            { 0.1, 0.2, 0.3, 0.4 },
+            { 0.5, 0.6, 0.7, 0.8 },
+            { 0.9, 1.0, 1.1, 1.2 },
+            { 1.3, 1.4, 1.5, 1.6 }
+    };
+
+    vector<float> biasWeights = { 0.1, 0.2, 0.3, 0.4 };
+
+    for (int i = 0; i < inputs.size(); i++) {
+        layer->setLayerInput(i, inputs[i]);
+    }
+    layer->setWeights(weights);
+    layer->setBiasWeights(biasWeights);
+    layer->calculate();
+
+    vector<float> expected = { 0.3, 0.7, 1.1, 1.5, 1 };
+    for (int i = 0; i < expected.size(); i++) {
+        ASSERT_FLOAT_EQ(layer->getNeuron(i)->getOutput(), expected[i]);
+    }
 }

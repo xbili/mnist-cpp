@@ -13,7 +13,7 @@ using namespace std;
 
 class Layer {
 
-private:
+protected:
     vector<Neuron*> neurons; // Matrix of neurons
     vector<float> inputs; // The layer inputs
 

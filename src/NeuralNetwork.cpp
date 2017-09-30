@@ -14,17 +14,20 @@ NeuralNetwork::NeuralNetwork(
 ) {
     m_inputLayer = new InputLayer(inputCount, inputNeurons);
 
+    int inputLayerOutputs = m_inputLayer->getNeuronCount();
     if (hiddenLayers.size() > 0) {
         // First hidden layer receives the output of the input layer
-        m_hiddenLayers.push_back(new Layer(inputNeurons, hiddenLayers[0]));
+        m_hiddenLayers.push_back(new Layer(inputLayerOutputs, hiddenLayers[0]));
 
+        int prevLayerOutput = m_hiddenLayers.back()->getNeuronCount();
         for (int i = 1; i < hiddenLayers.size(); i++) {
-            m_hiddenLayers.push_back(new Layer(hiddenLayers[i-1], hiddenLayers[i]));
+            m_hiddenLayers.push_back(new Layer(prevLayerOutput, hiddenLayers[i]));
+            prevLayerOutput = m_hiddenLayers.back()->getNeuronCount();
         }
 
-        m_outputLayer = new OutputLayer(hiddenLayers.back(), outputCount);
+        m_outputLayer = new OutputLayer(prevLayerOutput, outputCount);
     } else {
-        m_outputLayer = new OutputLayer(inputNeurons, outputCount);
+        m_outputLayer = new OutputLayer(inputLayerOutputs, outputCount);
     }
 }
 

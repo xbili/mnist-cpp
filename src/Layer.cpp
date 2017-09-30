@@ -32,7 +32,8 @@ void Layer::calculate() {
     float sum;
 
     // Apply the formula for each neuron
-    for (int i = 0; i < neurons.size(); i++) {
+    // -1 to exclude the bias neuron
+    for (int i = 0; i < neurons.size() - 1; i++) {
         // TODO: This is the dot product function to replace!
         sum = 0;
         for (int j = 0; j < getInputCount(); j++) {
@@ -45,6 +46,18 @@ void Layer::calculate() {
         } else {
             neurons[i]->setOutput(0);
         }
+    }
+
+    // Set the output value for our bias neuron
+    sum = 0;
+    for (int i = 0; i < getInputCount(); i++) {
+        sum += neurons.back()->getWeight(i) * 1.0;
+    }
+    // ReLU activation function
+    if (sum > 0) {
+        neurons.back()->setOutput(sum);
+    } else {
+        neurons.back()->setOutput(0);
     }
 }
 
