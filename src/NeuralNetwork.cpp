@@ -4,7 +4,6 @@
 
 #include <cstring>
 #include "NeuralNetwork.h"
-#include "InputLayer.h"
 
 NeuralNetwork::NeuralNetwork(
         int inputCount,

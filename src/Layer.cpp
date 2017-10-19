@@ -5,6 +5,7 @@
 #include <math.h>
 #include <algorithm>
 #include "Layer.h"
+#include "LinearAlg.h"
 
 Layer::Layer(int inputSize, int neuronCount) {
     // Initialize vector of neurons
@@ -34,11 +35,7 @@ void Layer::calculate() {
     // Apply the formula for each neuron
     // -1 to exclude the bias neuron
     for (int i = 0; i < neurons.size() - 1; i++) {
-        // TODO: This is the dot product function to replace!
-        sum = 0;
-        for (int j = 0; j < getInputCount(); j++) {
-            sum += neurons[i]->getWeight(j) * inputs[j];
-        }
+        sum = LinearAlg::dotProduct(getNeuron(i)->getWeights(), inputs);
 
         // ReLU activation function
         if (sum > 0) {

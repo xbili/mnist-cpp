@@ -13,7 +13,12 @@ using namespace std;
 class Neuron {
 
 private:
-    vector<float> weights; // Neuron input weights
+    vector<float> weights;
+public:
+    const vector<float> &getWeights() const;
+
+private:
+    // Neuron input weights
     vector<float> deltaValues; // Neuron delta values
     float output = 0; // Output value
     float gain = 0; // Gain value

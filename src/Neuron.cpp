@@ -73,3 +73,7 @@ void Neuron::setDeltaValue(int i, float delta) {
 void Neuron::incrementWgain(float value) {
     wgain += value;
 }
+
+const vector<float> &Neuron::getWeights() const {
+    return weights;
+}
